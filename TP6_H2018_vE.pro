@@ -6,7 +6,7 @@
 
 QT       += core gui
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets multimedia
 
 TARGET = TP6_H2018
 TEMPLATE = app
@@ -34,7 +34,6 @@ SOURCES += \
 
 HEADERS += \
         mainwindow.h \
-    ../../Downloads/Solution (1)/Gestionnaire.h \
     Gestionnaire.h \
     Usager.h \
     Client.h \
@@ -44,3 +43,6 @@ HEADERS += \
 
 FORMS += \
         mainwindow.ui
+
+DISTFILES += \
+    doki.wav

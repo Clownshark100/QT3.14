@@ -17,6 +17,7 @@
 #include <QFrame>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
+#include <QSound>
 
 #include <typeinfo>
 #include <string>
@@ -57,7 +58,10 @@ void MainWindow::setup() {
 
 void MainWindow::setConnections()
 {
-   /*À Faire*/
+   connect(gestionnaire_,SIGNAL(usagerAjoute(Usager*)),
+	this,SLOT(usagerAEteAjoute(Usager*)));
+   connect(gestionnaire_,SIGNAL(usagerSupprime(Usager*)),
+	this,SLOT(usagerAEteSupprime(Usager*)));
 }
 
 void MainWindow::setMenu() {
@@ -76,13 +80,22 @@ void MainWindow::setMenu() {
 
     // Dans lequel on ajoute notre bouton 'Exit'
     fileMenu->addAction(exit);
+	
+	
+	QSound::play("Z:/QT3.14/debug/doki.wav");
 }
 
 void MainWindow::setUI() {
 
     // Le sélecteur pour filtrer ce que l'on souhaite dans la liste (QComboBox*)
-    /*À Faire*/
     QComboBox* showCombobox = new QComboBox(this);
+
+	showCombobox->addItem("Tout afficher");
+	showCombobox->addItem("Afficher clients reguliers");
+	showCombobox->addItem("Afficher clients premiums");
+	showCombobox->addItem("Afficher fournisseurs");
+	
+	connect(showCombobox, SIGNAL(currentIndexChanged(int)), this, SLOT(filtrerListe(int)));
 
     // La liste des usagers
     listUsager = new QListWidget(this);
@@ -96,7 +109,10 @@ void MainWindow::setUI() {
     connect(boutonSupprimerTousLesUsagers, SIGNAL(clicked()), this, SLOT(supprimerTousLesUsagers()));
 
     // Le bouton pour remettre à zéro la vue et ajouter un nouvel employé
-    /*À Faire*/
+    QPushButton* addUser = new QPushButton(this);
+	addUser->setText("Ajouter usager");
+	connect(addUser, SIGNAL(clicked()), this, SLOT(nettoyerVue()));
+	
 
     // Le premier layout, pour la colonne de gauche, dans lequel on insère les
     // éléments que l'on veut dans l'ordre dans lequel on veut qu'ils apparaissent
@@ -104,6 +120,7 @@ void MainWindow::setUI() {
     // à faire ajouter  le sélecteur
     listLayout->addWidget(listUsager);
     listLayout->addWidget(boutonSupprimerTousLesUsagers);
+	listLayout->addWidget(addUser);
     // à faire ajouter le  nouveau usager
 
     // Champ pour le nom
@@ -252,7 +269,12 @@ bool MainWindow::filtrerMasque(Usager* usager) {
 //Fonction qui affiche les usagers d'un certain type selon l'index donné en paramètre
 //Il s'agit des champs du dropdown menu ( Tous les usagers = 0 , Tous les clients reguliers = 1, tous les fournisseurs = 2...)
 void MainWindow::filtrerListe(int index) {
-    /*À Faire*/
+	indexCourantDuFiltre_ = index;
+    for(int i=0; i< listUsager->count(); i++){
+		QListWidgetItem* item = listUsager->item(i);
+		Usager* usager = item->data(Qt::UserRole).value<Usager*>();
+		item->setHidden(filtrerMasque(usager));
+	}
 }
 
 //Fonction qui affiche les informations de l'usager sélectionné à partir de la liste.
