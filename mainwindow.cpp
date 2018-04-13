@@ -153,10 +153,22 @@ void MainWindow::setUI() {
     identifiantLayout->addWidget(editeurIdentifiant);
 
     // Champ pour le code postal
-    /*À Faire*/
+    QLabel* codePostalLabel = new QLabel;
+    codePostalLabel->setText("Code Postal:");
+    editeurCodePostal = new QLineEdit;
+
+    QHBoxLayout* codePostalLayout = new QHBoxLayout;
+    codePostalLayout->addWidget(codePostalLabel);
+    codePostalLayout->addWidget(editeurCodePostal);
 
     //Champ pour JoursRestant de ClientPremium avec validateur int entre 0 et 1000
-    /*À Faire*/
+    QLabel* joursRestantLabel = new QLabel;
+    joursRestantLabel->setText("Jours restants:");
+    editeurJoursRestants = new QLineEdit;
+
+    QHBoxLayout* joursRestantsLayout = new QHBoxLayout;
+    joursRestantsLayout->addWidget(joursRestantLabel);
+    joursRestantsLayout->addWidget(editeurJoursRestants);
 
     // Boutons radio
     QRadioButton* clientPremiumBoutonRadio = new QRadioButton("&ClientPremium", this);
@@ -206,6 +218,8 @@ void MainWindow::setUI() {
     displayLayout->addLayout(nomLayout);
     displayLayout->addLayout(prenomLayout);
     displayLayout->addLayout(identifiantLayout);
+    displayLayout->addLayout(codePostalLayout);
+    displayLayout->addLayout(joursRestantsLayout);
     displayLayout->addLayout(typeUsagerLayout);
     displayLayout->addWidget(horizontalFrameLine);
     displayLayout->addLayout(ajouterSupprimerLayout);
@@ -236,7 +250,8 @@ void MainWindow::setUI() {
 
 //Cette fonction crée une boite de message de type popup
 void MainWindow::afficherMessage(QString msg) {
-    /*À Faire*/
+    QMessageBox* messageBox = new QMessageBox;
+    messageBox->setText(msg);
 }
 
 //Charger tous les usagers connus
