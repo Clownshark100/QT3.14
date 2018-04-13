@@ -18,6 +18,7 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QSound>
+#include <QIntValidator>
 
 #include <typeinfo>
 #include <string>
@@ -82,7 +83,7 @@ void MainWindow::setMenu() {
     fileMenu->addAction(exit);
 	
 	
-	QSound::play("Z:/QT3.14/debug/doki.wav");
+    QSound::play("doki.wav");
 }
 
 void MainWindow::setUI() {
@@ -142,7 +143,14 @@ void MainWindow::setUI() {
     prenomLayout->addWidget(editeurPrenom);
 
     //Champ pour l'identifiant avec validateur int entre 0 et 100 000
-    /*À Faire*/
+    QLabel* identifiantLabel = new QLabel;
+    identifiantLabel->setText("Identifiant:");
+    editeurIdentifiant = new QLineEdit;
+    editeurIdentifiant->setValidator(new QIntValidator(0, 100000, this));
+
+    QHBoxLayout* identifiantLayout = new QHBoxLayout;
+    identifiantLayout->addWidget(identifiantLabel);
+    identifiantLayout->addWidget(editeurIdentifiant);
 
     // Champ pour le code postal
     /*À Faire*/
@@ -197,6 +205,7 @@ void MainWindow::setUI() {
     QVBoxLayout* displayLayout = new QVBoxLayout;
     displayLayout->addLayout(nomLayout);
     displayLayout->addLayout(prenomLayout);
+    displayLayout->addLayout(identifiantLayout);
     displayLayout->addLayout(typeUsagerLayout);
     displayLayout->addWidget(horizontalFrameLine);
     displayLayout->addLayout(ajouterSupprimerLayout);
