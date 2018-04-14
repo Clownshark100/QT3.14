@@ -19,6 +19,7 @@
 #include <QHBoxLayout>
 #include <QSound>
 #include <QIntValidator>
+#include <QString>
 
 #include <typeinfo>
 #include <string>
@@ -252,6 +253,7 @@ void MainWindow::setUI() {
 void MainWindow::afficherMessage(QString msg) {
     QMessageBox* messageBox = new QMessageBox;
     messageBox->setText(msg);
+    messageBox->setStandardButtons(QMessageBox::Ok);
 }
 
 //Charger tous les usagers connus
@@ -308,10 +310,26 @@ void MainWindow::selectionnerUsager(QListWidgetItem* item) {
     Usager* usager = item->data(Qt::UserRole).value<Usager*>();
 
     //Tous les champs sont mis à disabled et affiche l'information de l'usager sélectionné
-    /*À Faire*/
+    editeurNom->setDisabled(true);
+    editeurNom->setText(QString::fromStdString(usager->obtenirNom()));
+
+    editeurPrenom->setDisabled(true);
+    editeurPrenom->setText(QString::fromStdString(usager->obtenirPrenom()));
+
+    editeurIdentifiant->setDisabled(true);
+    editeurIdentifiant->setText(QString::number(usager->obtenirIdentifiant()));
+
+    editeurCodePostal->setDisabled(true);
+    editeurCodePostal->setText(QString::fromStdString(usager->obtenirCodePostal()));
 
     //Affiche les jours restants s'il s'agit d'un ClientPremium, sinon on affiche "-"
-    /*À Faire*/
+    editeurJoursRestants->setDisabled(true);
+    if(typeid(*usager)==typeid(ClientPremium)){
+        ClientPremium* clientPremium = dynamic_cast<ClientPremium*> (usager);
+        editeurJoursRestants->setText(QString::number(clientPremium->obtenirJoursRestants()));
+    }
+    else
+        editeurJoursRestants->setText("-");
 
     //On met a checked le type d'usager qui est sélectionné
     list<QRadioButton*>::iterator end = boutonRadioTypeUsager.end();
