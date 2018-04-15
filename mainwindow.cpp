@@ -421,31 +421,71 @@ void MainWindow::supprimerUsagerSelectionne() {
 void MainWindow::ajouterUsager() {
 
     Usager* nouvelUsager;
-
-    /*À Faire*/
+    //On trouve le bon type d'usager selon le bouton radio sélectionné
+    QRadioButton* typeSelectionne =0;
+    list<QRadioButton*>::iterator end = boutonRadioTypeUsager.end();
+    for(auto it = boutonRadioTypeUsager.begin();it!=end;it++){
+        if((*it)->isChecked()){
+            typeSelectionne = *it;
+            break;
+        }
+    }
 
     //Utilisation d'un try throw catch pour faire un popup message si tous les champs ne sont pas remplis
-    /*...*/
+    try{
+        string nom = editeurNom->text().toStdString();
 
-    //On trouve le bon type d'usager selon le bouton radio sélectionné
-    /*...*/
 
-    // On créé le bon type d'usager selon le cas
-    /*...*/
+        if(nom == ""){
+           throw ExceptionArgumentInvalide("Le champs nom est invalide.");
+        }
+        string prenom = editeurPrenom->text().toStdString();
+        if(prenom == ""){
+             throw ExceptionArgumentInvalide("Le champs prenom est invalide.");
+        }
+        bool ok;
+        int identifiant = editeurIdentifiant->text().toInt(&ok);
+        if(!ok){
+            throw ExceptionArgumentInvalide("Le champs identifiant est invalide.");
+        }
+        string codePostal = editeurCodePostal->text().toStdString();
+        if(codePostal == ""){
+             throw ExceptionArgumentInvalide("Le champs code postal est invalide.");
+        }
+        // On créé le bon type d'usager selon le cas
+        if(typeSelectionne->text().endsWith("ClientPremium")){
+            int joursRestants = editeurJoursRestants->text().toInt(&ok);
+            if(!ok){
+                throw ExceptionArgumentInvalide("Le champs jours restants est invalide.");
+            }
+            nouvelUsager = new ClientPremium(nom,prenom,identifiant,codePostal,joursRestants);
+        }
+        else if(typeSelectionne->text().endsWith("Client")){
+            nouvelUsager = new Client(nom,prenom,identifiant,codePostal);
+        }
+        else{
+            nouvelUsager = new Fournisseur(nom,prenom,identifiant,codePostal);
+        }
 
-    //Vérification que tous les champs ont été complétés
-    /*...*/
-
+    }catch(ExceptionArgumentInvalide& e) {
+        QMessageBox boiteMessage;
+        boiteMessage.critical(0,"Erreur:",e.what());
+        return;
+    }
     // On ajoute le nouvel usager créé au gestionnaire
-    /*...*/
+    gestionnaire_->ajouterUsager(nouvelUsager);
 
     // Mais on le stocke aussi localement dans l'attribut ajoute_ pour pouvoir le supprimer plus tard
-    /*...*/
+    ajoute_.push_back(nouvelUsager);
 }
 
 //Mise à jour de la vue après l'ajout d'un usager
 void MainWindow::usagerAEteAjoute(Usager* u) {
-    /*À Faire*/
+    string usager = u->obtenirNom() + "," + u->obtenirPrenom();
+    QListWidgetItem* item = new QListWidgetItem(QString::fromStdString(usager),listUsager);
+    item->setData(Qt::UserRole,QVariant::fromValue<Usager*>(u));
+
+    item->setHidden(filtrerMasque(u));
 }
 
 //Mise à jour de la vue après la suppression d'un usager
