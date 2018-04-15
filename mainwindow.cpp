@@ -119,11 +119,11 @@ void MainWindow::setUI() {
     // Le premier layout, pour la colonne de gauche, dans lequel on insère les
     // éléments que l'on veut dans l'ordre dans lequel on veut qu'ils apparaissent
     QVBoxLayout* listLayout = new QVBoxLayout;
-    // à faire ajouter  le sélecteur
+    listLayout->addWidget(showCombobox);
     listLayout->addWidget(listUsager);
     listLayout->addWidget(boutonSupprimerTousLesUsagers);
 	listLayout->addWidget(addUser);
-    // à faire ajouter le  nouveau usager
+
 
     // Champ pour le nom
     QLabel* nomLabel = new QLabel;
@@ -199,7 +199,10 @@ void MainWindow::setUI() {
     horizontalFrameLine->setFrameShape(QFrame::HLine);
 
     // Bouton pour supprimer l'usager sélectionné dans la liste
-    /*À Faire*/
+    boutonSupprimer = new QPushButton(this);
+    boutonSupprimer->setText("Supprimer");
+    boutonSupprimer->setDisabled(true);
+    connect(boutonSupprimer,SIGNAL(clicked()),this, SLOT(supprimerUsagerSelectionne()));
 
     // Bouton pour ajouter l'usager dont on
     // vient d'entrer les informations
@@ -211,7 +214,7 @@ void MainWindow::setUI() {
     // Organisation horizontale des boutons
     QHBoxLayout* ajouterSupprimerLayout = new QHBoxLayout;
     ajouterSupprimerLayout->addWidget(boutonAjouter);
-    // À faire ajouter le bouton supprimé
+    ajouterSupprimerLayout->addWidget(boutonSupprimer);
 
     // Organisation pour la colonne de droite
     // ajouter les 3 champs: identifiant, code postal, joursRestants
@@ -393,12 +396,25 @@ void MainWindow::changerTypeUsager(int index) {
 
 //Supprimer tous les usagers de la liste
 void MainWindow::supprimerTousLesUsagers() {
-    /*À Faire*/
+    vector<Usager*> aSupprimer;
+    for (int i =0; i< listUsager->count();i++){
+        QListWidgetItem *item = listUsager->item(i);
+        aSupprimer.push_back(item->data(Qt::UserRole).value<Usager*>());
+    }
+    for(Usager* usager : aSupprimer){
+        gestionnaire_->supprimerUsager(usager);
+    }
 }
 
 //Supprime l'usager sélectionné dans la liste
 void MainWindow::supprimerUsagerSelectionne() {
-    /*À Faire*/
+    vector<Usager*> aSupprimer;
+    for(QListWidgetItem*item:listUsager->selectedItems()){
+        aSupprimer.push_back(item->data(Qt::UserRole).value<Usager*>());
+    }
+    for(Usager* usager : aSupprimer){
+        gestionnaire_->supprimerUsager(usager);
+    }
 }
 
 //Ajoute un nouvel usager dans la liste
